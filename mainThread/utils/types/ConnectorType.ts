@@ -1,0 +1,1 @@
+export type ConnectorType = "VERT" | "HOR" | "ELB";

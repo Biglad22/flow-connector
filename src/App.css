@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: var(--figma-color-bg);
+  --color-component-background: var(--figma-color-bg-component);
+  --color-secondary-background: var(--figma-color-bg-secondary);
+  --color-text-strong: var(--figma-color-text);
+  --color-text: var(--figma-color-text-tertiary);
+  --color-brand: var(--figma-color-bg-brand);
+  --color-border-brand: var(--figma-color-border-brand);
+  --color-border: var(--figma-color-border);
+  --color-background-hover: var(--figma-color-bg-hover);
+}
+
+body {
+  background-color: var(--figma-color-bg);
+  color: var(--figma-color-text);
+}
+
+::-webkit-scrollbar {
+  @apply w-1 h-1;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-background;
+}
+
+input:focus {
+  outline: none;
+}
+
+* {
+  @apply ring-border-brand outline-border-brand;
+}
+
+/* =============== BUTTON STYLES */
+/* ------- FILLED BUTTON */
+button {
+  padding: 8px 16px;
+  cursor: pointer;
+}
+button.fill {
+  background-color: var(--figma-color-bg-brand);
+  color: var(--figma-color-text-onbrand);
+  border: 2px solid var(--figma-color-bg-brand);
+}
+button.fill:hover {
+  background-color: var(--figma-color-bg-brand-hover);
+  border-color: var(--figma-color-bg-brand-hover);
+}
+button.fill:active {
+  background-color: var(--figma-color-bg-brand-pressed);
+  border-color: var(--figma-color-bg-brand-pressed);
+}
+button.fill:disabled {
+  background-color: var(--figma-color-bg-disabled);
+  border-color: var(--figma-color-bg-disabled);
+}
+
+/* ------- OUTLINED BUTTON */
+button.outlined {
+  background-color: transparent;
+  border: 2px solid var(--figma-color-border);
+  color: var(--figma-color-text);
+}
+button.outlined:hover {
+  border-color: var(--figma-color-bg-brand-hover);
+  color: var(--figma-color-text-tertiary-hover);
+}
+button.outlined:active {
+  border-color: var(--figma-color-bg-brand-pressed);
+  color: var(--figma-color-bg-brand-pressed);
+}
+button.outlined:disabled {
+  border-color: var(--figma-color-bg-disabled);
+  color: var(--figma-color-bg-disabled);
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+p,
+label {
+  @apply text-sm sm:text-base;
+}
+/* ============= INPUT STYLE */
+/* input{
+  padding: 8px;
+  background-color: transparent;
+  caret: var(--figma-color-bg-brand);
+  outline-offset: 1px;
+  border-radius: 4px;
+  color: var(--figma-color-text);
+  border: 2px solid var(--figma-color-border-strong);
+}
+
+input:focus{
+  border-color: var(--figma-color-bg-brand);
+  outline: unset;
+} */
+
+/* Remove arrows in Chrome, Edge, Safari */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Remove arrows in Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.disabled {
+  pointer-events: none; /* blocks clicks, hovers, etc */
+  opacity: 0.5; /* visual disabled state */
+}

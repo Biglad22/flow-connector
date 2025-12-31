@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "types": ["@figma/plugin-typings"],
+    "lib": ["ES2018"], // remove DOM to avoid conflicts
+    "target": "ES2018",
+    "skipLibCheck": true,
+    "module": "ESNext",
+    "strict": true,
+    "moduleResolution": "bundler",
+    "moduleDetection": "force",
+    "noEmit": true
+  },
+  "include": ["mainThread"]
+}

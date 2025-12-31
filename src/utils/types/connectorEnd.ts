@@ -1,0 +1,1 @@
+export type ConnectorEnd = "FLAT" | "ARROW" | "ARROW_FILLED" | "ROUND" | "ROUND_FILLED"
