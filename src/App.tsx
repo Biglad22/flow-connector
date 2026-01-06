@@ -28,7 +28,7 @@ function App() {
     useConnectorEndSelector();
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="p-4 space-y-4 hide-scroller h-full overflow-auto">
       <SelectionBox
         selections={selections}
         onChange={(value: string) => handleStyleChange("label", value)}
@@ -43,7 +43,7 @@ function App() {
       </div>
 
       <div className="flex items-center justify-between gap-4 py-0.5">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
           <NumericInput
             label={<AlignmentIcon className="fill-text" />}
             name="connector-width"
@@ -59,7 +59,7 @@ function App() {
             value={connectorStyles.radius}
           />
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
           <SelectionButton
             onClick={(value: ConnectorStyle["strokeStyle"]) => {
               handleStyleChange("strokeStyle", value ? value : "DASHED");

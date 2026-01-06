@@ -23,6 +23,7 @@ export default async function exportConnections({
   const frameToExport = figma.createFrame();
   frameToExport.x = 10000000;
   frameToExport.y = 10000000;
+  frameToExport.fills = figma.currentPage.backgrounds;
 
   const minX = Math.min(
     ...arrayOfConnection.map(({ node }) => {
@@ -68,6 +69,7 @@ export default async function exportConnections({
     const { h, w, y, x } = getAbsoluteCoordinate(node as SceneNode);
     const nodeLabelFrame = figma.createFrame();
     nodeLabelFrame.strokes = [figma.util.solidPaint({ r: 0, g: 0, b: 0 })];
+    nodeLabelFrame.fills = figma.currentPage.backgrounds;
     nodeLabelFrame.strokeWeight = 2;
     nodeLabelFrame.cornerRadius = 2;
     nodeLabelFrame.x = x - (minX - WRAPPER_FRAME_PADDING);
@@ -102,5 +104,4 @@ export default async function exportConnections({
     format,
   });
   frameToExport.remove();
-
 }

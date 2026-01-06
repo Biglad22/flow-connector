@@ -21,7 +21,7 @@ export async function drawConnectorLabel(
   const label = figma.createText();
   label.fontName = constants.CONNECTOR_LABEL_FONT_STYLE;
   label.characters = props.label;
-  label.fontSize = 40;
+  label.fontSize = 18;
   label.fills = [labelPaint];
   persistPluginData(label, { role: "CONNECTOR_LABEL_TEXT" });
 

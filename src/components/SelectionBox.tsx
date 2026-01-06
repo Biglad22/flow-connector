@@ -13,11 +13,10 @@ export default function SelectionBox({
   connectorLabel,
   onChange,
 }: Props) {
-  const isSelected = selections && selections?.length > 0;
-
   const boxGeneralStyle =
     "rounded-xl bg-background border w-24 h-30 p-2! text-xs text-center line-clamp-2 text-text flex items-center justify-center";
-  const boxStyle = `${boxGeneralStyle} ${!isSelected ? "border-dashed border-border" : "border-border-brand"}`;
+  const boxStyle = (isSelected: boolean) =>
+    `${boxGeneralStyle} ${!isSelected ? "border-dashed border-border" : "border-border-brand"}`;
 
   return (
     <div className="w-full px-4 py-4 rounded-2xl bg-secondary-background space-y-4">
@@ -26,11 +25,11 @@ export default function SelectionBox({
       </p>
       {!selections || selections?.length <= 2 ? (
         <div className="flex items-center gap-4 justify-center">
-          <div className={boxStyle}>
+          <div className={boxStyle(Boolean(selections?.[0]))}>
             {selections && selections[0] ? selections[0]?.name : "unselected"}
           </div>
           <ArrowHead className="stroke-text size-5" />
-          <div className={boxStyle}>
+          <div className={boxStyle(Boolean(selections?.[1]))}>
             {selections && selections[1] ? selections[1]?.name : "unselected"}
           </div>
         </div>

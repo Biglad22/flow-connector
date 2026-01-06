@@ -24,6 +24,15 @@ body {
   @apply bg-background;
 }
 
+.hide-scroller {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+.hide-scroller::-webkit-scrollbar {
+  display: none; /* Chrome, Edge, Safari */
+}
+
 input:focus {
   outline: none;
 }

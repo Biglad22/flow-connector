@@ -11,5 +11,6 @@ export function getAbsoluteCoordinate(node: SceneNode) {
     mid,
     w: node.width,
     h: node.height,
+    trail: { x: absX + node.width, y: absY + node.height },
   };
 }
