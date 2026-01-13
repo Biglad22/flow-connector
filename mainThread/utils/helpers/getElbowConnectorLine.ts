@@ -39,14 +39,15 @@ export const getElbowConnectorLine = ({
 
   let path = `M ${startingPoint.x} ${startingPoint.y}`;
 
-  let meetPoint: Coordinate = {
-    x:
-      Math.min(startingPoint.x, destination.x) +
-      Math.abs(startingPoint.x - destination.x) / 2,
-    y:
-      Math.min(startingPoint.y, destination.y) +
-      Math.abs(startingPoint.y - destination.y) / 2,
-  };
+  let meetPoint: Coordinate;
+  // = {
+  //   x:
+  //     Math.min(startingPoint.x, destination.x) +
+  //     Math.abs(startingPoint.x - destination.x) / 2,
+  //   y:
+  //     Math.min(startingPoint.y, destination.y) +
+  //     Math.abs(startingPoint.y - destination.y) / 2,
+  // };
 
   /**
    * ROUTING FROM VERTICAL START EDGE
@@ -67,13 +68,13 @@ export const getElbowConnectorLine = ({
       path += ` L ${pushedDestination.x} ${destination.y}`;
       path += ` L ${destination.x} ${destination.y}`;
 
-      // meetPoint = { x: startingPoint.x, y: firstY };
+      meetPoint = { x: startingPoint.x, y: firstY };
     } else {
       path += ` L ${startingPoint.x} ${pushedDestination.y}`;
       path += ` L ${destination.x} ${pushedDestination.y}`;
       path += ` L ${destination.x} ${destination.y}`;
 
-      //meetPoint = { x: startingPoint.x, y: pushedDestination.y };
+      meetPoint = { x: startingPoint.x, y: pushedDestination.y };
     }
   } else {
     /**
@@ -94,13 +95,13 @@ export const getElbowConnectorLine = ({
       path += ` L ${destination.x} ${pushedDestination.y}`;
       path += ` L ${destination.x} ${destination.y}`;
 
-      //meetPoint = { x: firstX, y: startingPoint.y };
+      meetPoint = { x: firstX, y: startingPoint.y };
     } else {
       path += ` L ${pushedDestination.x} ${startingPoint.y}`;
       path += ` L ${pushedDestination.x} ${destination.y}`;
       path += ` L ${destination.x} ${destination.y}`;
 
-      //meetPoint = { x: pushedDestination.x, y: startingPoint.y };
+      meetPoint = { x: pushedDestination.x, y: startingPoint.y };
     }
   }
 

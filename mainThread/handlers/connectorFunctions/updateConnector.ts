@@ -30,10 +30,12 @@ export default async function updateConnector({
   const head = connectorGroup.children.find(
     (n) => getPluginData<{ role: ConnectorPart }>(n)?.role === "HEAD",
   ) as ConnectorEndNode | undefined;
+  head?.remove();
 
   const tail = connectorGroup.children.find(
     (n) => getPluginData<{ role: ConnectorPart }>(n)?.role === "TAIL",
   ) as ConnectorEndNode | undefined;
+  tail?.remove();
 
   let label = connectorGroup.children.find(
     (n) =>
@@ -65,13 +67,11 @@ export default async function updateConnector({
   }
 
   if (updates?.head) {
-    head?.remove();
     connectorGroup.appendChild(updates?.head);
     persistPluginData(updates?.head, { role: "HEAD" as ConnectorPart });
   }
 
   if (updates?.tail) {
-    tail?.remove();
     connectorGroup.appendChild(updates?.tail);
     persistPluginData(updates?.tail, { role: "TAIL" as ConnectorPart });
   }

@@ -114,6 +114,7 @@ function getExactConnectionEdge(
   absDx: number,
   absDy: number,
   relativePos: RelativePos,
+  dy: number,
 ): ConnectionEdge {
   let edge: ConnectionEdge = "TOP";
 
@@ -166,7 +167,7 @@ function getTargetConnectionEdge(props: {
 
   if (props.isAnchor) return getAnchorEdge({ ...exactRelativePos, absX, absY });
 
-  return getExactConnectionEdge(absX, absY, exactRelativePos.targetPos);
+  return getExactConnectionEdge(absX, absY, exactRelativePos.targetPos, dy);
 }
 
 function getRelativePosCoordinate(
@@ -200,10 +201,19 @@ function isNotInBox(
   edge: ConnectionEdge,
   point: Coordinate,
   box: ReturnType<typeof getAbsoluteCoordinate>,
-) {
-  if (edge == "BOTTOM") return point.y <= box.trail.y || point.y >= box.y;
-  else if (edge == "TOP") return point.y >= box.y || point.y >= box.y;
-  else if (edge == "LEFT") return point.x > box.mid.x;
+): boolean {
+  // Robust rectangle inclusion check using center + size.
+  const halfW = box.w / 2;
+  const halfH = box.h / 2;
 
-  return point.x < box.mid.x;
+  const left = box.mid.x - halfW;
+  const right = box.mid.x + halfW;
+  const top = box.mid.y - halfH;
+  const bottom = box.mid.y + halfH;
+
+  const inside =
+    point.x >= left && point.x <= right && point.y >= top && point.y <= bottom;
+
+  // Keep original function semantics: return true when the point is NOT in the box.
+  return !inside;
 }

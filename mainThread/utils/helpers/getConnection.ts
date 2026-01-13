@@ -40,7 +40,6 @@ export const getConnection = async (props: Props) => {
     nodes.push(label);
     persistPluginData(label, { role: "LABEL" as ConnectorPart });
   }
-
   if (props.strokeWeight) connector.strokeWeight = props.strokeWeight;
   if (props.stroke) connector.strokes = [figma.util.solidPaint(props.stroke)];
   if (props.dashPattern) {
