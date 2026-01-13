@@ -1,12 +1,24 @@
 import { constants } from "../constants";
+import { setFigmaSelection } from "../context/SelectionIntent";
 import { areNodesConnected } from "../utils/helpers/areNodesConnected";
 import { getPluginData } from "../utils/helpers/handleConnectorPersistence/getPluginData";
 import { retrieveNodeConnector } from "../utils/helpers/handleConnectorPersistence/retrieveNodeConnector";
+import { verifyConnector } from "../utils/helpers/handleConnectorPersistence/retrievePersistedConnectors";
 import { ConnectorPluginData } from "../utils/types/ConnectorPluginData";
+import { ConnectorStyle } from "../utils/types/ConnectorStyle";
 import { NodeConnection } from "../utils/types/NodeConnection";
 import { postMessageToUI } from "./postMessageToUI";
 
-export const getConnectorInfo = async (
+type RefinedNode = { name: string; type: string };
+type PostMessage = {
+  type: "selections";
+  selections: Array<RefinedNode>;
+  connections?: Array<NodeConnection>;
+  style?: ConnectorStyle;
+  isConnected?: boolean;
+};
+
+export const getNodesConnectorInfo = async (
   selections: readonly SceneNode[],
 ): Promise<
   | ({
@@ -20,8 +32,8 @@ export const getConnectorInfo = async (
   if (selections.length !== 2) return;
   const [nodeA, nodeB] = selections;
 
-  const connA = (await retrieveNodeConnector(nodeA)) ?? [];
-  const connB = (await retrieveNodeConnector(nodeB)) ?? [];
+  const connA = (await retrieveNodeConnector(nodeA))?.validConnections ?? [];
+  const connB = (await retrieveNodeConnector(nodeB))?.validConnections ?? [];
 
   // flatten connections
   const connections = [...connA, ...connB];
@@ -40,6 +52,8 @@ export const getConnectorInfo = async (
     const connector = await figma.getNodeByIdAsync(connectorId);
 
     if (connector && connector.type == "GROUP") {
+      /// CHANGE SELECTION TO CONNECTOR
+      setFigmaSelection([connector], { scroll: true });
       const data = getPluginData<ConnectorPluginData>(
         connector,
         constants.PLUGIN_DATA_KEY_CONNECTOR,
@@ -55,25 +69,77 @@ export const getConnectorInfo = async (
   return messagePayload;
 };
 
+// TRY TO CHECK IF SELECTION | NODE IS A SELECTOR
+export async function prepareConnector(node: SceneNode): Promise<
+  | {
+      messagePayload: Partial<PostMessage> &
+        ConnectorPluginData & {
+          connector?: SceneNode;
+          connectorId?: string;
+        };
+      nodes: Array<RefinedNode>;
+    }
+  | undefined
+> {
+  const connectorData = await verifyConnector(node);
+  if (!connectorData) return;
+
+  let messagePayload: Partial<PostMessage> &
+    ConnectorPluginData & {
+      connector?: SceneNode;
+      connectorId?: string;
+    } = {
+    connector: node,
+    isConnected: connectorData.isConnected,
+    connectorId: node.id,
+    ...(connectorData.connectorData ?? {}),
+  };
+
+  const fromNode = await retrieveNodeConnector(
+      undefined,
+      connectorData.connectorData.fromNodeId,
+    ),
+    toNode = await retrieveNodeConnector(
+      undefined,
+      connectorData.connectorData.toNodeId,
+    );
+
+  if (!fromNode || !toNode) return;
+
+  messagePayload.connections = [
+    ...(fromNode?.validConnections ?? []),
+    ...(toNode?.validConnections ?? []),
+  ];
+
+  return {
+    messagePayload,
+    nodes: [
+      { name: fromNode?.node.name, type: fromNode?.node.type },
+      { name: toNode?.node.name, type: toNode?.node.type },
+    ],
+  };
+}
+
+//========== MAIN FUNCTION ===========================
 export const refineSelectionsAndPostMsgToUI = async (
   selections: readonly SceneNode[],
 ) => {
   let connections: NodeConnection[] = [];
-  const result: Array<{ name: string; type: string }> = [];
+  const numberOfSelection = selections.length;
 
   // === TWO NODE SELECTION ===
-  if (selections.length === 2) {
+  if (numberOfSelection === 2) {
     const [nodeA, nodeB] = selections;
-    const connectorInfo = await getConnectorInfo(selections);
+    const connectorInfo = await getNodesConnectorInfo(selections);
 
-    result.push(
+    const selectedNodes = [
       { name: nodeA.name, type: nodeA.type },
       { name: nodeB.name, type: nodeB.type },
-    );
+    ];
 
-    const messagePayload: any = {
+    const messagePayload: PostMessage = {
       type: "selections",
-      selections: result,
+      selections: selectedNodes,
       connections: connectorInfo?.connections,
       style: connectorInfo?.style,
       isConnected: connectorInfo?.isConnected || false,
@@ -83,16 +149,46 @@ export const refineSelectionsAndPostMsgToUI = async (
     return;
   }
 
-  // === MULTI SELECTION ===
-  for (const node of selections) {
-    const connectionData = await retrieveNodeConnector(node);
-    connections = [...connections, ...(connectionData || [])];
+  const prepareSelection = async () => {
+    // === MULTI SELECTION ===
+    const selectedNodes = [];
+    for (const node of selections) {
+      const connectionData = await retrieveNodeConnector(node);
+      connections = [
+        ...connections,
+        ...(connectionData?.validConnections || []),
+      ];
 
-    result.push({
-      name: node.name,
-      type: node.type,
-    });
+      selectedNodes.push({
+        name: node.name,
+        type: node.type,
+      });
+    }
+    postMessageToUI({
+      type: "selections",
+      selections: selectedNodes,
+      connections,
+    } as PostMessage);
+  };
+
+  if (numberOfSelection === 1) {
+    const possibleConnectorData = await prepareConnector(selections[0]);
+
+    if (possibleConnectorData) {
+      const { messagePayload: metadata, nodes } = possibleConnectorData;
+
+      const messagePayload: PostMessage = {
+        type: "selections",
+        selections: nodes,
+        connections: metadata?.connections,
+        style: metadata?.style,
+        isConnected: metadata.isConnected || false,
+      };
+      postMessageToUI(messagePayload);
+
+      return;
+    }
   }
 
-  postMessageToUI({ type: "selections", selections: result, connections });
+  prepareSelection();
 };

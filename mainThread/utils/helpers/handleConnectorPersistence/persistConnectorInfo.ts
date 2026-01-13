@@ -5,7 +5,9 @@ import { retrieveNodeConnector } from "./retrieveNodeConnector";
 
 export const persistConnectorInfo = (
   node: SceneNode,
-  payload: NonNullable<Awaited<ReturnType<typeof retrieveNodeConnector>>>,
+  payload: NonNullable<
+    Awaited<ReturnType<typeof retrieveNodeConnector>>
+  >["validConnections"],
 ) => {
   let existingPluginData = getPluginData<Record<string, any>>(
     node,

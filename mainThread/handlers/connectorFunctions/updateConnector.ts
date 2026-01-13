@@ -5,6 +5,7 @@ import { updateElbowConnectorData } from "../../utils/helpers/updateConnectorDat
 import { ConnectorEndNode } from "../../utils/types/ConnectorEnd";
 import { ConnectorPart } from "../../utils/types/ConnectorPart";
 import { ConnectorPluginData } from "../../utils/types/ConnectorPluginData";
+import { refineSelectionsAndPostMsgToUI } from "../refineSelectionsAndPostMsgToUI";
 import { drawConnectorLabel } from "./drawConnectorLabel";
 import { updateConnectorLabel } from "./updateConnectorLabel";
 
@@ -20,8 +21,6 @@ export default async function updateConnector({
   toNodeId,
   applyStyle = false,
 }: Props) {
-  console.log(style, applyStyle);
-
   const connector = connectorGroup.children.find(
     (n) =>
       getPluginData<{ role: ConnectorPart }>(n)?.role === "CONNECTOR_LINE" &&

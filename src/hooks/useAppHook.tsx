@@ -3,15 +3,17 @@ import type { ConnectionInfo } from "../utils/types/connectionInfo";
 import type { SelectedNode } from "../utils/types/connectorNode";
 import type { ConnectorStyle } from "../utils/types/connectorStyle";
 
+const initialStyle: ConnectorStyle = {
+  stroke: "#000000",
+  startType: "ARROW",
+  endType: "ARROW",
+  radius: 0,
+  strokeStyle: "SOLID",
+  strokeWeight: 2,
+};
 export default function useAppHook() {
-  const [connectorStyles, setConnectorStyles] = useState<ConnectorStyle>({
-    stroke: "#000000",
-    startType: "ARROW",
-    endType: "ARROW",
-    radius: 0,
-    strokeStyle: "SOLID",
-    strokeWeight: 2,
-  });
+  const [connectorStyles, setConnectorStyles] =
+    useState<ConnectorStyle>(initialStyle);
 
   const [exportSettings, setExportSettings] = useState<{
     format: ExportSettings["format"];
@@ -72,8 +74,11 @@ export default function useAppHook() {
 
       setExportSettings((prev) => ({ ...prev, connectorIds }));
 
-      if (pluginMsg.isConnected && pluginMsg.style) {
+      // RESET OR UPDATE STYLE
+      if (pluginMsg.style) {
         setConnectorStyles((prev) => ({ ...prev, ...pluginMsg.style }));
+      } else {
+        setConnectorStyles(initialStyle);
       }
 
       setConnectionInfo({

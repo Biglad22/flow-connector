@@ -33,22 +33,22 @@ export function getConnectorEdge({
   return [targetEdge, otherEdge];
 }
 
-function getNodeConnectorEdge({ target, other }: Props): ConnectionEdge {
-  const dx = other.mid.x - target.mid.x;
-  const dy = other.mid.y - target.mid.y;
-  const absDx = Math.abs(dx);
-  const absDy = Math.abs(dy);
+// function getNodeConnectorEdge({ target, other }: Props): ConnectionEdge {
+//   const dx = other.mid.x - target.mid.x;
+//   const dy = other.mid.y - target.mid.y;
+//   const absDx = Math.abs(dx);
+//   const absDy = Math.abs(dy);
 
-  const toleranceX = (target.w + other.w) / 2 + constants.DISTANCE_TOLERANCE;
-  const toleranceY = (target.h + other.h) / 2 + constants.DISTANCE_TOLERANCE;
+//   const toleranceX = (target.w + other.w) / 2 + constants.DISTANCE_TOLERANCE;
+//   const toleranceY = (target.h + other.h) / 2 + constants.DISTANCE_TOLERANCE;
 
-  // Prioritize horizontal if horizontal gap is bigger
-  if (absDx > absDy) {
-    return dx > toleranceX ? "RIGHT" : "TOP";
-  } else {
-    return dy > toleranceY ? "BOTTOM" : "TOP";
-  }
-}
+//   // Prioritize horizontal if horizontal gap is bigger
+//   if (absDx > absDy) {
+//     return dx > toleranceX ? "RIGHT" : "TOP";
+//   } else {
+//     return dy > toleranceY ? "BOTTOM" : "TOP";
+//   }
+// }
 
 type RelativePos = "TL" | "TR" | "BL" | "BR";
 // THIS FINDS POSITION OF BOX RELATIVE TO A TARGET BOX
@@ -114,7 +114,6 @@ function getExactConnectionEdge(
   absDx: number,
   absDy: number,
   relativePos: RelativePos,
-  tolerance: Coordinate,
 ): ConnectionEdge {
   let edge: ConnectionEdge = "TOP";
 
@@ -139,28 +138,6 @@ function getExactConnectionEdge(
       else edge = "BOTTOM";
       break;
   }
-
-  // switch (relativePos) {
-  //   case "TR":
-  //     if (absDx >= tolerance.x) edge = "RIGHT";
-  //     else edge = "TOP";
-  //     break;
-
-  //   case "TL":
-  //     if (absDx >= tolerance.x) edge = "LEFT";
-  //     else edge = "TOP";
-  //     break;
-
-  //   case "BR":
-  //     if (absDx >= tolerance.x) edge = "RIGHT";
-  //     else edge = "BOTTOM";
-  //     break;
-
-  //   case "BL":
-  //     if (absDx >= tolerance.x) edge = "LEFT";
-  //     else edge = "BOTTOM";
-  //     break;
-  // }
   return edge;
 }
 
@@ -189,12 +166,7 @@ function getTargetConnectionEdge(props: {
 
   if (props.isAnchor) return getAnchorEdge({ ...exactRelativePos, absX, absY });
 
-  return getExactConnectionEdge(
-    absX,
-    absY,
-    exactRelativePos.targetPos,
-    props.tolerance,
-  );
+  return getExactConnectionEdge(absX, absY, exactRelativePos.targetPos);
 }
 
 function getRelativePosCoordinate(
@@ -229,8 +201,8 @@ function isNotInBox(
   point: Coordinate,
   box: ReturnType<typeof getAbsoluteCoordinate>,
 ) {
-  if (edge == "BOTTOM") return point.y < box.mid.y;
-  else if (edge == "TOP") return point.y > box.mid.y;
+  if (edge == "BOTTOM") return point.y <= box.trail.y || point.y >= box.y;
+  else if (edge == "TOP") return point.y >= box.y || point.y >= box.y;
   else if (edge == "LEFT") return point.x > box.mid.x;
 
   return point.x < box.mid.x;

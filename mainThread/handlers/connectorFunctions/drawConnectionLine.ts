@@ -1,7 +1,6 @@
 import { getConnection } from "../../utils/helpers/getConnection";
 import { persistConnectorInfo } from "../../utils/helpers/handleConnectorPersistence/persistConnectorInfo";
 import persistPluginData from "../../utils/helpers/handleConnectorPersistence/persistPluginData";
-import { ConnectorPart } from "../../utils/types/ConnectorPart";
 import { ConnectorStyle } from "../../utils/types/ConnectorStyle";
 
 type Props = {
@@ -35,6 +34,7 @@ export default async function drawConnectionLine(props: Props) {
       },
     },
   ]);
+  
   persistConnectorInfo(props.selections[1], [
     {
       connectorId: connectorGroup.id,

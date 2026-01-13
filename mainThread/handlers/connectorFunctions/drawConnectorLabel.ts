@@ -1,4 +1,5 @@
 import { constants } from "../../constants";
+import { invertColor } from "../../utils/helpers/getInverseColor";
 import persistPluginData from "../../utils/helpers/handleConnectorPersistence/persistPluginData";
 import { Coordinate } from "../../utils/types/coordinate";
 
@@ -16,40 +17,48 @@ export async function drawConnectorLabel(
 
   await figma.loadFontAsync(constants.CONNECTOR_LABEL_FONT_STYLE);
 
-  const labelPaint = figma.util.solidPaint(props.color ?? { r: 0, g: 0, b: 0 });
+  const labelFramePaint = figma.util.solidPaint(
+    props.color ?? { r: 0, g: 0, b: 0 },
+  );
+  const labelPaint = figma.util.solidPaint(
+    invertColor(props.color ?? { r: 0, g: 0, b: 0 }),
+  );
 
   const label = figma.createText();
   label.fontName = constants.CONNECTOR_LABEL_FONT_STYLE;
   label.characters = props.label;
-  label.fontSize = 18;
+  label.fontSize = constants.CONNECTOR_LABEL_FONT_SIZE;
   label.fills = [labelPaint];
   persistPluginData(label, { role: "CONNECTOR_LABEL_TEXT" });
 
-  const containerWidth = label.width + constants.CONNECTOR_LABEL_PADDING.x,
-    containerHeight = label.height + constants.CONNECTOR_LABEL_PADDING.y;
-
   const labelContainer = figma.createFrame();
-  labelContainer.resize(
-    containerWidth + (props.strokeWeight ?? 2) * 2,
-    containerHeight + (props.strokeWeight ?? 2) * 2,
-  );
-  labelContainer.strokes = [labelPaint];
+  labelContainer.strokes = [labelFramePaint];
   labelContainer.strokeWeight = props.strokeWeight ?? 2;
-  labelContainer.fills = figma.currentPage.backgrounds;
+  labelContainer.fills = [labelFramePaint];
   labelContainer.cornerRadius = props.radius ?? 1;
   labelContainer.clipsContent = false;
-  labelContainer.layoutMode = "NONE";
 
-  const containerX =
-    props.coordinates.x - (props.strokeWeight ?? 2) - labelContainer.width / 2;
-  const containerY =
-    props.coordinates.y - (props.strokeWeight ?? 2) - labelContainer.height / 2;
-  labelContainer.x = containerX;
-  labelContainer.y = containerY;
+  // Make it an Auto Layout frame
+  labelContainer.layoutMode = "HORIZONTAL";
+  labelContainer.primaryAxisSizingMode = "AUTO";
+  labelContainer.counterAxisSizingMode = "AUTO";
+  labelContainer.primaryAxisAlignItems = "CENTER";
+  labelContainer.counterAxisAlignItems = "CENTER";
+  labelContainer.itemSpacing = 0;
+
+  const stroke = props.strokeWeight ?? 2;
+  labelContainer.paddingLeft = constants.CONNECTOR_LABEL_PADDING.x / 2 + stroke;
+  labelContainer.paddingRight =
+    constants.CONNECTOR_LABEL_PADDING.x / 2 + stroke;
+  labelContainer.paddingTop = constants.CONNECTOR_LABEL_PADDING.y / 2 + stroke;
+  labelContainer.paddingBottom =
+    constants.CONNECTOR_LABEL_PADDING.y / 2 + stroke;
 
   labelContainer.appendChild(label);
-  label.x = constants.CONNECTOR_LABEL_PADDING.x / 2 + (props.strokeWeight ?? 2);
-  label.y = constants.CONNECTOR_LABEL_PADDING.y / 2 + (props.strokeWeight ?? 2);
+
+  // Center the auto frame on the provided coordinate
+  labelContainer.x = props.coordinates.x - labelContainer.width / 2;
+  labelContainer.y = props.coordinates.y - labelContainer.height / 2;
 
   return labelContainer;
 }

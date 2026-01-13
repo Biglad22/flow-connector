@@ -20,8 +20,8 @@ type Props = {
 
 type FuncReturnType = {
   line: string;
-  head: ConnectorEndNode;
-  tail: ConnectorEndNode;
+  head?: ConnectorEndNode;
+  tail?: ConnectorEndNode;
   label?: FrameNode;
 };
 
@@ -47,15 +47,6 @@ export async function getElbowConnectorData(
     second,
     secondConnectionEdge,
   );
-
-  // const minCoord: Coordinate = {
-  //   x: Math.min(firstConnectionEdgeCoord.x, secondConnectionEdgeCoord.x),
-  //   y: Math.min(firstConnectionEdgeCoord.y, secondConnectionEdgeCoord.y),
-  // };
-  // const maxCoord: Coordinate = {
-  //   x: Math.max(firstConnectionEdgeCoord.x, secondConnectionEdgeCoord.x),
-  //   y: Math.max(firstConnectionEdgeCoord.y, secondConnectionEdgeCoord.y),
-  // };
 
   let connectorEndStyle = {
     stroke: props.stroke,

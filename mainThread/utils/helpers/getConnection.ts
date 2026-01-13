@@ -12,7 +12,6 @@ export const getConnection = async (props: Props) => {
   if (props.selections.length < 2) return;
   if (!props.radius) props.radius = 0;
   if (!props.strokeWeight) props.strokeWeight = 2;
-
   const connector = figma.createVector();
 
   let data = "";
@@ -25,8 +24,6 @@ export const getConnection = async (props: Props) => {
   head = elbowConnector.head;
   tail = elbowConnector.tail;
   label = elbowConnector.label;
-
-  connector.vectorPaths = [vectorPath];
 
   const nodes: Array<SceneNode> = [connector];
   persistPluginData(connector, { role: "CONNECTOR_LINE" as ConnectorPart });
@@ -43,6 +40,7 @@ export const getConnection = async (props: Props) => {
     nodes.push(label);
     persistPluginData(label, { role: "LABEL" as ConnectorPart });
   }
+
   if (props.strokeWeight) connector.strokeWeight = props.strokeWeight;
   if (props.stroke) connector.strokes = [figma.util.solidPaint(props.stroke)];
   if (props.dashPattern) {
