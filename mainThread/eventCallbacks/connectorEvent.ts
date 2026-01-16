@@ -5,6 +5,7 @@ import presentToast from "../handlers/presentToast";
 import {
   getNodesConnectorInfo,
   prepareConnector,
+  refineSelectionsAndPostMsgToUI,
 } from "../handlers/refineSelectionsAndPostMsgToUI";
 
 //=================== DRAWS CONNECTOR
@@ -19,6 +20,7 @@ export async function drawConnectorEvent(payload: any) {
   }
   payload.selections = figma.currentPage.selection;
   await drawConnectionLine(payload);
+  await refineSelectionsAndPostMsgToUI(figma.currentPage.selection);
 }
 
 //=================== UPDATES CONNECTOR

@@ -4,7 +4,7 @@ import type { SelectedNode } from "../utils/types/connectorNode";
 import type { ConnectorStyle } from "../utils/types/connectorStyle";
 
 const initialStyle: ConnectorStyle = {
-  stroke: "#000000",
+  stroke: "#ffff",
   startType: "ARROW",
   endType: "ARROW",
   radius: 0,

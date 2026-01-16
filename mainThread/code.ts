@@ -17,6 +17,9 @@ import { parameterModeEvent } from "./eventCallbacks/parameterModeEvent";
 // You can access browser APIs in the <script> tag inside "ui.html" which has a
 // full browser environment (See https://www.figma.com/plugin-docs/how-plugins-run).
 
+let pendingEvent: DocumentChangeEvent | null = null;
+let timer: number | null = null;
+
 figma.on("run", async ({ parameters }) => {
   if (parameters && "label" in parameters) {
     return await parameterModeEvent(parameters);
@@ -26,7 +29,21 @@ figma.on("run", async ({ parameters }) => {
   figma.showUI(__html__, { themeColors: true, width: 300, height: 500 });
 
   await figma.loadAllPagesAsync();
-  figma.on("documentchange", documentChangeEvent);
+  figma.on("documentchange", async (change) => {
+    pendingEvent = change;
+
+    if (timer) return;
+
+    timer = setTimeout(() => {
+      timer = null;
+      const evt = pendingEvent;
+      pendingEvent = null;
+
+      if (evt) {
+        documentChangeEvent(evt);
+      }
+    }, 50);
+  });
 });
 
 figma.ui.onmessage = async (msg) => {

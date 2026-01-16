@@ -77,7 +77,7 @@ export default async function exportConnections({
     nodeLabelFrame.resize(w, h);
 
     // TEXT LABEL FOR CONNECTED NODES
-    const connectedNodeText = await getTextNode({ text: nodeLabelFrame.name });
+    const connectedNodeText = await getTextNode({ text: node.name });
     const textLength = nodeLabelFrame.name.length;
     const textPossibleSize = (nodeLabelFrame.width * 0.6) / textLength;
     connectedNodeText.fontSize = Math.max(textPossibleSize, 18);

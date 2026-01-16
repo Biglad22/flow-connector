@@ -27,15 +27,20 @@ export default async function updateConnector({
       n.type === "VECTOR",
   ) as VectorNode | undefined;
 
-  const head = connectorGroup.children.find(
-    (n) => getPluginData<{ role: ConnectorPart }>(n)?.role === "HEAD",
-  ) as ConnectorEndNode | undefined;
-  head?.remove();
+  for (const child of [...connectorGroup.children]) {
+    const role = getPluginData<{ role: ConnectorPart }>(child)?.role;
+    if (role === "HEAD" || role === "TAIL") {
+      child.remove();
+    }
+  }
 
-  const tail = connectorGroup.children.find(
-    (n) => getPluginData<{ role: ConnectorPart }>(n)?.role === "TAIL",
-  ) as ConnectorEndNode | undefined;
-  tail?.remove();
+  // const head = connectorGroup.children.find(
+  //   (n) => getPluginData<{ role: ConnectorPart }>(n)?.role === "HEAD",
+  // ) as ConnectorEndNode | undefined;
+
+  // const tail = connectorGroup.children.find(
+  //   (n) => getPluginData<{ role: ConnectorPart }>(n)?.role === "TAIL",
+  // ) as ConnectorEndNode | undefined;
 
   let label = connectorGroup.children.find(
     (n) =>
@@ -50,8 +55,8 @@ export default async function updateConnector({
     toNodeId,
     style,
     connector,
-    head,
-    tail,
+    // head,
+    // tail,
     label: label || undefined,
   });
 

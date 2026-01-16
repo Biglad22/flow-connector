@@ -16,10 +16,10 @@ export default function SelectionBox({
   const boxGeneralStyle =
     "rounded-xl bg-background border w-24 h-30 p-2! text-xs text-center line-clamp-2 text-text flex items-center justify-center";
   const boxStyle = (isSelected: boolean) =>
-    `${boxGeneralStyle} ${!isSelected ? "border-dashed border-border" : "border-border-brand"}`;
+    `${boxGeneralStyle} ${!isSelected ? "border-dashed border-border" : "border-blue-300"}`;
 
   return (
-    <div className="w-full px-4 py-4 rounded-2xl bg-secondary-background space-y-4">
+    <div className="w-full px-4 py-4 rounded-2xl  bg-secondary-background space-y-4">
       <p className="text-center text-text-strong font-sans font-normal text-sm leading-none ">
         Select the two frames you want to connect
       </p>

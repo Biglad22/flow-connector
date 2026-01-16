@@ -20,12 +20,15 @@ function App() {
     handleStyleChange,
     connectorStyles,
     handleSubmission,
-    exportSettings,
-    setExportSettings,
-    handleConnectionExport,
+    // exportSettings,
+    // setExportSettings,
+    // handleConnectionExport,
   } = useAppHook();
-  const { endOptions, startOptions, exportFormatOption } =
-    useConnectorEndSelector();
+  const {
+    endOptions,
+    startOptions,
+    //exportFormatOption
+  } = useConnectorEndSelector();
 
   return (
     <div className="p-4 space-y-4 hide-scroller h-full overflow-auto">
@@ -106,7 +109,7 @@ function App() {
           />
         </label>
       </div>
-      {exportSettings.connectorIds.length > 0 && (
+      {/* {exportSettings.connectorIds.length > 0 && (
         <div className="py-4 space-y-2 border-t border-b border-border">
           <p className="blocks text-text-strong">Export Existing Connections</p>
           <div className="flex items-center gap-2">
@@ -137,7 +140,7 @@ function App() {
             </button>
           </div>
         </div>
-      )}
+      )} */}
       <button
         className="fill rounded-4xl w-full text-sm font-medium uppercase"
         onClick={handleSubmission}

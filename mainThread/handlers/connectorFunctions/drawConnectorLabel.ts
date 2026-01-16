@@ -23,6 +23,9 @@ export async function drawConnectorLabel(
   const labelPaint = figma.util.solidPaint(
     invertColor(props.color ?? { r: 0, g: 0, b: 0 }),
   );
+  // const labelPaint = figma.util.solidPaint(
+  //   props.color === "#000" ? { r: 255, g: 255, b: 255 } : { r: 0, g: 0, b: 0 },
+  // );
 
   const label = figma.createText();
   label.fontName = constants.CONNECTOR_LABEL_FONT_STYLE;

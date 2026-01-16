@@ -17,8 +17,8 @@ export async function updateElbowConnectorData(props: {
   fromNodeId: string;
   toNodeId: string;
   connector: VectorNode;
-  head: ConnectorEndNode;
-  tail: ConnectorEndNode;
+  // head: ConnectorEndNode;
+  // tail: ConnectorEndNode;
   label?: FrameNode;
   style?: ConnectorStyle;
 }): Promise<FuncReturnType | undefined> {

@@ -15,6 +15,7 @@ export const updateConnectorLabel = async (
   const labelFramePaint = figma.util.solidPaint(
     style.stroke ?? { r: 0, g: 0, b: 0 },
   );
+
   const labelPaint = figma.util.solidPaint(
     invertColor(style.stroke ?? { r: 0, g: 0, b: 0 }),
   );
