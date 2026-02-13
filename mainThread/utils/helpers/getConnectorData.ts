@@ -62,6 +62,7 @@ export async function getElbowConnectorData(
     startingPoint: firstConnectionEdgeCoord,
     endEdge: secondConnectionEdge,
   });
+
   const head = getElbowConnectorHead({
     connectionEdge: firstConnectionEdge,
     coord: firstConnectionEdgeCoord,

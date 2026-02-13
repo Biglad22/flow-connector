@@ -46,7 +46,6 @@ export default async function retrievePersistedConnectors(): Promise<ExpectedRet
   for (const node of figma.currentPage.children) {
     const result = await verifyConnector(node);
     if (result && result.isConnected) connectors.push(node);
-
     continue;
   }
 

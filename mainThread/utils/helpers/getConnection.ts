@@ -21,6 +21,8 @@ export const getConnection = async (props: Props) => {
 
   const elbowConnector = await getElbowConnectorData(props);
   vectorPath.data = elbowConnector.line;
+  connector.vectorPaths = [vectorPath];
+
   head = elbowConnector.head;
   tail = elbowConnector.tail;
   label = elbowConnector.label;

@@ -8,21 +8,40 @@ export default async function getAffectedConnectedNode(
   const affectedConnectedNodes = new Map<string, ChangedConnection>();
   const affectedConnectors = new Map<string, ChangedConnection>();
 
-  documentChanges.forEach(({ id, ...changes }) => {
-    const connectedNode = availableConnectedNodes.indexConnectedNodes.get(id);
-    const connectorNode = availableConnectedNodes.indexConnectors.get(id);
+  const changesMap = new Map<string, DocumentChange>();
+
+  documentChanges.forEach((change) => {
+    const storedChange = changesMap.get(change.id);
+    if (storedChange && storedChange?.type == "CREATE") return;
+    if (
+      change.type == "PROPERTY_CHANGE" &&
+      change.properties.length == 1 &&
+      change.properties.includes("pluginData")
+    )
+      return;
+    changesMap.set(change.id, change);
+  });
+
+  for (const changes of changesMap.values()) {
+    const connectedNode = availableConnectedNodes.indexConnectedNodes.get(
+      changes.id,
+    );
+    const connectorNode = availableConnectedNodes.indexConnectors.get(
+      changes.id,
+    );
+
     if (connectedNode) {
-      affectedConnectedNodes.set(id, {
+      affectedConnectedNodes.set(changes.id, {
         ...changes,
         ...connectedNode,
       });
     } else if (connectorNode) {
-      affectedConnectors.set(id, {
+      affectedConnectors.set(changes.id, {
         ...changes,
         ...connectorNode,
       });
     }
-  });
+  }
 
   return { affectedConnectedNodes, affectedConnectors };
 }

@@ -11,6 +11,7 @@ export const getElbowConnectorHead = (props: {
   stroke?: string;
   strokeWeight?: number;
 }): ConnectorEndNode => {
+
   if (!props.headType) return;
   const vertEdges: Array<ConnectionEdge> = ["BOTTOM", "TOP"];
   const connectorHead: Parameters<typeof drawLineStart>[0] = {

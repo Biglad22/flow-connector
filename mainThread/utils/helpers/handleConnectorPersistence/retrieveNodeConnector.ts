@@ -60,8 +60,6 @@ export const retrieveNodeConnector = async (
       connection.connection.from !== node.id &&
       connection.connection.to !== node.id
     ) {
-      console.log("Here", node);
-
       unlinkConnector({
         node,
         connectorId: connection.connectorId,

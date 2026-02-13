@@ -9,7 +9,7 @@ export function setFigmaSelection(
 
   figma.currentPage.selection = nodes;
 
-  if (opts?.scroll !== false) {
+  if (opts?.scroll) {
     figma.viewport.scrollAndZoomIntoView(nodes);
   }
 

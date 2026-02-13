@@ -10,12 +10,12 @@ export async function documentChangeEvent({
   documentChanges,
 }: DocumentChangeEvent) {
   const affectedConnectors = await getAffectedConnectedNodes(documentChanges);
-
   for (const {
     connector,
     type,
     connectorMetaData: { fromNodeId, style, toNodeId },
-  } of affectedConnectors.affectedConnectedNodes.values()) {
+  } of affectedConnectors?.affectedConnectedNodes.values() || []) {
+
     switch (type) {
       case "DELETE":
         for (const nodeId of [fromNodeId, toNodeId]) {
@@ -43,7 +43,7 @@ export async function documentChangeEvent({
     connector,
     type,
     connectorMetaData: metadata,
-  } of affectedConnectors.affectedConnectors.values()) {
+  } of affectedConnectors?.affectedConnectors.values() || []) {
     switch (type) {
       case "DELETE":
         for (const nodeId of [metadata.fromNodeId, metadata.toNodeId]) {

@@ -77,9 +77,10 @@ export default function useAppHook() {
       // RESET OR UPDATE STYLE
       if (pluginMsg.style) {
         setConnectorStyles((prev) => ({ ...prev, ...pluginMsg.style }));
-      } else {
-        setConnectorStyles(initialStyle);
       }
+      // else {
+      //   setConnectorStyles(initialStyle);
+      // }
 
       setConnectionInfo({
         isConnected: (pluginMsg.isConnected as boolean) || false,
