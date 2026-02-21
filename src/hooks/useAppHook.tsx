@@ -5,8 +5,8 @@ import type { ConnectorStyle } from "../utils/types/connectorStyle";
 
 const initialStyle: ConnectorStyle = {
   stroke: "#ffff",
-  startType: "ARROW",
-  endType: "ARROW",
+  startType: "FLAT",
+  endType: "ARROW_FILLED",
   radius: 0,
   strokeStyle: "SOLID",
   strokeWeight: 2,
